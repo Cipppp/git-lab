@@ -1,19 +1,18 @@
-#include <iostream>
-#include <cstdlib>
-#include <cstdio>
 #include <immintrin.h>
-#include <vector>
 #include <sys/random.h>
+
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
-int get_random_std()
-{
+int get_random_std() {
     return rand() % 200;
 }
 
-int get_random_rdrand()
-{
+int get_random_rdrand() {
     unsigned int ret;
 
     int rc = _rdrand32_step(&ret);
@@ -24,8 +23,7 @@ int get_random_rdrand()
         return -1;
 }
 
-int get_random_dev_urandom()
-{
+int get_random_dev_urandom() {
     int ret, read;
 
     FILE *urandom = fopen("/dev/urandom", "r");
@@ -40,8 +38,7 @@ int get_random_dev_urandom()
         return -1;
 }
 
-int get_random_getrandom()
-{
+int get_random_getrandom() {
     int ret, read;
 
     read = getrandom(&ret, sizeof(ret), 0);
@@ -52,15 +49,13 @@ int get_random_getrandom()
         return read;
 }
 
-int get_random(int (*random_func)())
-{
+int get_random(int (*random_func)()) {
     return random_func() % 200;
 }
 
 typedef int (*fp)();
 
-int main()
-{
+int main() {
     int n;
 
     cout << "Please enter a number" << endl;
@@ -68,18 +63,14 @@ int main()
 
     uint32_t rnd;
 
-    srand((unsigned) time(NULL));
+    srand((unsigned)time(NULL));
 
-    vector<fp> randoms = { get_random_getrandom, get_random_dev_urandom, get_random_rdrand, get_random_std };
+    vector<fp> randoms = {get_random_getrandom, get_random_dev_urandom, get_random_rdrand, get_random_std};
 
-    for (int i = 0; i <= 5; i++)
-    {
-        if (get_random(randoms[i % 4]) == 150)
-        {
+    for (int i = 0; i <= 5; i++) {
+        if (get_random(randoms[i % 4]) == 150) {
             n += 1;
-        }
-        else
-        {
+        } else {
             i--;
         }
     }
